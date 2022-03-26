@@ -1,6 +1,7 @@
 from flask import Flask,send_from_directory
 app = Flask(__name__)
 app.secret_key = 'test'
+import json
 
 @app.route('/')
 def home():
@@ -8,8 +9,18 @@ def home():
 
 @app.route('/proxy/', methods=['GET'])
 def result():
-    return send_from_directory('','proxy.json')
+    f =  open('proxy.json')
+    file = json.load(f)
+    proxy = ""
+    for i in file["data"]:        
+        proxy = proxy + str(i) + "<br>"
+        
+    print(proxy)
+    html = """<pre style="">"""+proxy+""" </pre>"""
+
+
+    return html#send_from_directory('','proxy.json')
 
 if __name__ == '__main__':
     app.debug = True
-    app.run(host='0.0.0.0',port=5000,use_reloader=True)
+    app.run(host='0.0.0.0',port=8080,use_reloader=True)
